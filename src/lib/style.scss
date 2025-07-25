@@ -1,6 +1,77 @@
 @use "sass:color";
 @use 'default_theme' as *;
 
+// Date Tree Component Styles
+.ka-custom-date-tree-container {
+  padding: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.ka-custom-date-tree-item {
+  padding: 2px 0;
+}
+
+.ka-custom-date-tree-content {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.ka-custom-date-tree-expand-icon {
+  margin-right: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  width: 12px;
+  text-align: center;
+}
+
+.ka-custom-date-tree-expand-spacer {
+  width: 16px;
+}
+
+.ka-custom-date-tree-checkbox {
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.ka-custom-date-tree-checkbox--selected {
+  background-color: #0078d4;
+}
+
+.ka-custom-date-tree-checkbox--unselected {
+  background-color: white;
+}
+
+.ka-custom-date-tree-checkbox--indeterminate {
+  background-color: #0078d4;
+}
+
+.ka-custom-date-tree-checkmark {
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.ka-custom-date-tree-indeterminate-fill {
+  width: 8px;
+  height: 8px;
+  background-color: white;
+  border-radius: 1px;
+}
+
+.ka-custom-date-tree-label {
+  cursor: pointer;
+}
+
 
 .ka {
   overflow: hidden;
