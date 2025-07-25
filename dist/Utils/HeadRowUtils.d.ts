@@ -1,0 +1,33 @@
+import { SortDirection, SortingMode } from '../enums';
+import { Column } from '../Models/Column';
+export declare const getHeadCellClassName: (sortingMode: SortingMode, isGrouped?: boolean) => string;
+export declare const getUpdatedSortedColumns: (columns: Column[], columnKey: string, sortingMode: SortingMode) => {
+    colGroup?: React.ColHTMLAttributes<HTMLElement>;
+    dataType?: import("../enums").DataType;
+    field?: import("../types").Field;
+    filter?: (value: any, filterValue: any, rowData?: any) => boolean;
+    filterRowOperator?: any;
+    filterRowValue?: any;
+    headerFilterListItems?: (props: {
+        data?: any[];
+    }) => string[];
+    headerFilterPopupPosition?: import("../Models/PopupPosition").PopupPosition;
+    headerFilterSearch?: (value: any, searchValue: any, rowData?: any) => boolean;
+    headerFilterSearchValue?: any;
+    headerFilterValues?: string[];
+    isDraggable?: boolean;
+    isEditable?: boolean;
+    isFilterable?: boolean;
+    isHeaderFilterPopupShown?: boolean;
+    isHeaderFilterSearchable?: boolean;
+    isResizable?: boolean;
+    isSortable?: boolean;
+    key: string;
+    sortDirection?: SortDirection;
+    sortIndex?: number;
+    style?: React.CSSProperties;
+    title?: string;
+    visible?: boolean;
+    width?: number | string;
+}[];
+export declare const getNextSortDirection: (previousSortdirection?: SortDirection) => SortDirection;

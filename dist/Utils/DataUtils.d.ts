@@ -1,0 +1,11 @@
+import { Column } from '../Models/Column';
+import { Field } from '../types';
+export declare const getParentValue: (rowData: any, fieldParents: Field[]) => any;
+export declare const createObjByFields: (fieldParents: Field[], field: Field, value: any) => any;
+export declare const getValueByColumn: (rowData: any, column: Column) => any;
+export declare const getValueByField: (rowData: any, field: Field) => any;
+export declare const replaceValue: (rowData: any, column: Column, newValue: any) => any;
+export declare const reorderDataByIndex: (data: any[], getKey: (d: any) => any, keyValue: any, targetIndex: number) => any[];
+export declare const insertBefore: (data: any[], getKey: (d: any) => any, keyValue: any, targetKeyValue: any) => any[];
+export declare const reorderData: (data: any[], getKey: (d: any) => any, keyValue: any, targetKeyValue: any) => any[];
+export declare const checkIndexOdd: (index: number) => boolean;

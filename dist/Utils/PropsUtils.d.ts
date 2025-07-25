@@ -1,0 +1,30 @@
+import { ChildAttributesItem, DispatchFunc } from '../types';
+import { AllHTMLAttributes } from 'react';
+import { ChildComponent } from '../Models/ChildComponent';
+import { Column } from '../models';
+import { ITableProps } from '../';
+export declare function extendProps<T = HTMLElement>(childElementAttributes: AllHTMLAttributes<T>, childProps: any, childComponent?: ChildComponent<any>): React.AllHTMLAttributes<T>;
+export declare function mergeProps<T = HTMLElement>(childElementAttributes: AllHTMLAttributes<T>, childProps: any, childCustomAttributes: ChildAttributesItem<any>, dispatch: DispatchFunc): React.AllHTMLAttributes<T>;
+export declare const getFilteredData: (props: ITableProps) => any[];
+export declare const areAllFilteredRowsSelected: (props: ITableProps) => boolean;
+export declare const areAllVisibleRowsSelected: (props: ITableProps) => boolean;
+export declare const getData: (props: ITableProps) => any[];
+export declare const isValid: (props: ITableProps) => boolean;
+export declare const getSelectedData: ({ data, selectedRows, rowKeyField }: ITableProps) => any[];
+export declare const getSortedColumns: (props: ITableProps) => Column[];
+export declare const getPagesCountByProps: (props: ITableProps) => number;
+export declare const prepareTableOptions: (props: ITableProps) => {
+    columns: Column<any>[];
+    groupColumnsCount: number;
+    groupedColumns: Column<any>[];
+    groupedData: any[];
+};
+export declare const groupPanelOnDrop: (event: React.DragEvent, dispatch: DispatchFunc) => void;
+export declare const getDraggableProps: ({ key, dispatch, actionCreator, draggedClass, dragOverClass, hasReordering }: {
+    key: any;
+    dispatch: DispatchFunc;
+    actionCreator: (draggableKeyValue: any, targetKeyValue: any) => any;
+    draggedClass: string;
+    dragOverClass: string;
+    hasReordering: boolean;
+}) => ChildAttributesItem<any>;

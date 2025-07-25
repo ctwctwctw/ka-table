@@ -1,0 +1,24 @@
+import { Column } from '../models';
+import { FormatFunc } from '../types';
+import { Group } from '../Models/Group';
+import { GroupPanelSettings } from '../Models/GroupPanelSettings';
+export declare const groupMark: {};
+export declare const groupSummaryMark: {};
+export declare const groupDataMark: {};
+export declare const updateExpandedGroups: (groupsExpanded: any[][], groupKey: any[]) => any[][];
+export declare const getExpandedGroups: (groupedData: any[]) => any[][];
+export declare const getGroupedData: (data: any[], groups: Group[], groupedColumns: Column[], groupsExpanded?: any[]) => any[];
+export declare const convertToFlat: (grouped: Map<any, any>, key?: any[]) => any[];
+export declare const getGroupedStructure: ({ data, groups, groupedColumns, expandedDeep, groupsExpanded, parentGroupKey }: {
+    data: any[];
+    groups: Group[];
+    groupedColumns: Column[];
+    expandedDeep?: number;
+    groupsExpanded?: any[];
+    parentGroupKey?: any[];
+}) => Map<any, any> | void;
+export declare const groupBy: (data: any[], keyGetter: any, isEmptyValue?: boolean) => Map<any, any>;
+export declare const normalizeKeyForMap: (key: any) => any;
+export declare const getGroupMark: () => {};
+export declare const getGroupText: (value: any, column: Column, format?: FormatFunc, groupItems?: any[]) => any;
+export declare const isMaxDeep: (groupPanel: GroupPanelSettings, columns: Column[], groups?: Group[]) => boolean;

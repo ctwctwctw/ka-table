@@ -37,7 +37,7 @@ const HeaderFilterDemo = () => {
                 },
             ]}
             data={dataArray}
-            sortingMode={SortingMode.Single}
+            // sortingMode={SortingMode.Single}
             filteringMode={FilteringMode.HeaderFilter}
             format= {({ column, value }) => {
                 if (column.dataType === DataType.Date) {

@@ -1,0 +1,13 @@
+import { DataType } from '../enums';
+import { FilterFunc, FormatFunc, SearchFunc } from '../types';
+import { Column } from '../Models/Column';
+import { EditableCell } from '../Models/EditableCell';
+import { FilterOperator } from '../Models/FilterOperator';
+import { ITableProps } from '../';
+export declare const getRowEditableCells: (rowKeyValue: any, editableCells: EditableCell[]) => EditableCell[];
+export declare const searchData: (columns: Column[], data: any[], searchText: string, search?: SearchFunc) => any[];
+export declare const filterAndSearchData: (props: ITableProps) => any[];
+export declare const filterData: (data: any[], columns: Column[], filter?: FilterFunc) => any[];
+export declare const getDefaultOperatorForType: (type: DataType) => string;
+export declare const predefinedFilterOperators: FilterOperator[];
+export declare const filterByHeaderFilter: (data: any[], columns: Column[], format?: FormatFunc) => any[];
