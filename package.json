@@ -20,6 +20,31 @@
       "import": "./dist/enums.js",
       "require": "./dist/enums.js"
     },
+    "./props": {
+      "types": "./dist/props.d.ts",
+      "import": "./dist/props.js",
+      "require": "./dist/props.js"
+    },
+    "./models": {
+      "types": "./dist/models.d.ts",
+      "import": "./dist/models.js",
+      "require": "./dist/models.js"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "import": "./dist/types.js",
+      "require": "./dist/types.js"
+    },
+    "./actionCreators": {
+      "types": "./dist/actionCreators.d.ts",
+      "import": "./dist/actionCreators.js",
+      "require": "./dist/actionCreators.js"
+    },
+    "./utils": {
+      "types": "./dist/utils.d.ts",
+      "import": "./dist/utils.js",
+      "require": "./dist/utils.js"
+    },
     "./style.css": "./dist/style.css"
   },
   "files": [
