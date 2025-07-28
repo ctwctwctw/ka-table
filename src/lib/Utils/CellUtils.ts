@@ -64,14 +64,22 @@ export const checkPopupPosition = (
     const element = refToElement.current;
     if (element && column.isHeaderFilterPopupShown) {
         const parent = element.offsetParent as HTMLElement;
-        const table = parent.closest('table') as HTMLElement;
         const kaWrapper = parent.closest('.ka-table-wrapper') as HTMLElement;
-        const newPopupPosition: PopupPosition = {
-            x: element.offsetLeft + parent?.offsetLeft - kaWrapper?.scrollLeft,
-            y: element.offsetTop + table?.offsetTop + element.offsetHeight
-        }
-        if (newPopupPosition.x !== column.headerFilterPopupPosition?.x || newPopupPosition.y !== column.headerFilterPopupPosition?.y) {
-            dispatch(updatePopupPosition(newPopupPosition));
+
+        // Find the filter button to get its bottom position
+        const filterButton = element.querySelector('.ka-header-filter-button') as HTMLElement;
+
+        if (filterButton) {
+            const buttonRect = filterButton.getBoundingClientRect();
+            const parentRect = parent.getBoundingClientRect();
+
+            const newPopupPosition: PopupPosition = {
+                x: element.offsetLeft + parent?.offsetLeft - kaWrapper?.scrollLeft,
+                y: buttonRect.bottom - parentRect.top + parent.offsetTop
+            }
+            if (newPopupPosition.x !== column.headerFilterPopupPosition?.x || newPopupPosition.y !== column.headerFilterPopupPosition?.y) {
+                dispatch(updatePopupPosition(newPopupPosition));
+            }
         }
     }
 }
