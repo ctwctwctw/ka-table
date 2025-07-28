@@ -7,6 +7,21 @@
   "dependencies": {
   },
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "module": "dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./enums": {
+      "types": "./dist/enums.d.ts",
+      "import": "./dist/enums.js",
+      "require": "./dist/enums.js"
+    },
+    "./style.css": "./dist/style.css"
+  },
   "files": [
     "dist/"
   ],
