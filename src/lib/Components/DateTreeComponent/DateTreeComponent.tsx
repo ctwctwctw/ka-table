@@ -85,6 +85,7 @@ export const DateTreeComponent: React.FC<DateTreeComponentProps> = ({ nodes, onT
 
 export const DateTreeFilter: React.FC<DateTreeFilterProps> = ({ column, data, format, onFilterChange }) => {
     const [dateTreeNodes, setDateTreeNodes] = React.useState<DateTreeNode[]>([]);
+    const [expandedNodes, setExpandedNodes] = React.useState<Set<string>>(new Set());
 
     const buildDateTree = React.useCallback(() => {
         if (column.dataType !== DataType.Date || !data) return [];
@@ -137,7 +138,7 @@ export const DateTreeFilter: React.FC<DateTreeFilterProps> = ({ column, data, fo
                         label: day,
                         value: `${year}-${month}-${day}`,
                         isSelected: daySelected,
-                        isExpanded: false,
+                        isExpanded: expandedNodes.has(`${year}-${month}-${day}`),
                         level: 'day',
                         originalValues
                     });
@@ -153,7 +154,7 @@ export const DateTreeFilter: React.FC<DateTreeFilterProps> = ({ column, data, fo
                     value: monthKey,
                     isSelected: monthAllSelected,
                     isIndeterminate: monthSomeSelected,
-                    isExpanded: false,
+                    isExpanded: expandedNodes.has(monthKey),
                     level: 'month',
                     children: monthChildren,
                     originalValues: monthOriginalValues
@@ -169,7 +170,7 @@ export const DateTreeFilter: React.FC<DateTreeFilterProps> = ({ column, data, fo
                 value: year,
                 isSelected: yearAllSelected,
                 isIndeterminate: yearSomeSelected,
-                isExpanded: false,
+                isExpanded: expandedNodes.has(year),
                 level: 'year',
                 children: yearChildren,
                 originalValues: yearOriginalValues
@@ -177,7 +178,7 @@ export const DateTreeFilter: React.FC<DateTreeFilterProps> = ({ column, data, fo
         });
 
         return tree;
-    }, [column, data, format]);
+    }, [column, data, format, expandedNodes]);
 
     React.useEffect(() => {
         if (column.dataType === DataType.Date) {
@@ -186,19 +187,14 @@ export const DateTreeFilter: React.FC<DateTreeFilterProps> = ({ column, data, fo
     }, [column.dataType, buildDateTree]);
 
     const handleToggleExpand = (nodeValue: string) => {
-        setDateTreeNodes(prevNodes => {
-            const updateNode = (nodes: DateTreeNode[]): DateTreeNode[] => {
-                return nodes.map(node => {
-                    if (node.value === nodeValue) {
-                        return { ...node, isExpanded: !node.isExpanded };
-                    }
-                    if (node.children) {
-                        return { ...node, children: updateNode(node.children) };
-                    }
-                    return node;
-                });
-            };
-            return updateNode(prevNodes);
+        setExpandedNodes(prevExpanded => {
+            const newExpanded = new Set(prevExpanded);
+            if (newExpanded.has(nodeValue)) {
+                newExpanded.delete(nodeValue);
+            } else {
+                newExpanded.add(nodeValue);
+            }
+            return newExpanded;
         });
     };
 

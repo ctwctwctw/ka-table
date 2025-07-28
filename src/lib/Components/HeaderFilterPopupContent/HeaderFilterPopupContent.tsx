@@ -71,62 +71,32 @@ const HeaderFilterPopupContent: React.FC<IHeaderFilterPopupProps> = (props) => {
 
     return (
         <div>
-            <div style={{ padding: '8px', borderBottom: '1px solid #e0e0e0' }}>
+            <div className="ka-custom-header-filter-sort-container">
                 <div
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        padding: '4px 8px',
-                        cursor: 'pointer',
-                        borderRadius: '3px',
-                        backgroundColor: column.sortDirection === SortDirection.Ascend ? '#e3f2fd' : 'transparent'
-                    }}
-                    onMouseEnter={(e) => {
-                        if (column.sortDirection !== SortDirection.Ascend) {
-                            e.currentTarget.style.backgroundColor = '#f5f5f5';
-                        }
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = column.sortDirection === SortDirection.Ascend ? '#e3f2fd' : 'transparent';
-                    }}
+                    className={`ka-custom-header-filter-sort-button ${
+                        column.sortDirection === SortDirection.Ascend ? 'ka-custom-header-filter-sort-button--active' : ''
+                    }`}
                     onClick={handleSortAscending}
                 >
-                    <span style={{
-                        marginRight: '8px',
-                        fontSize: '14px',
-                        opacity: column.sortDirection === SortDirection.Ascend ? 1 : 0.7
-                    }}>↑</span>
-                    <span style={{
-                        fontWeight: column.sortDirection === SortDirection.Ascend ? 'bold' : 'normal'
-                    }}>昇順</span>
+                    <span className={`ka-custom-header-filter-sort-icon ${
+                        column.sortDirection === SortDirection.Ascend ? 'ka-custom-header-filter-sort-icon--active' : 'ka-custom-header-filter-sort-icon--inactive'
+                    }`}>↑</span>
+                    <span className={`ka-custom-header-filter-sort-text ${
+                        column.sortDirection === SortDirection.Ascend ? 'ka-custom-header-filter-sort-text--active' : ''
+                    }`}>昇順</span>
                 </div>
                 <div
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        padding: '4px 8px',
-                        cursor: 'pointer',
-                        borderRadius: '3px',
-                        backgroundColor: column.sortDirection === SortDirection.Descend ? '#e3f2fd' : 'transparent'
-                    }}
-                    onMouseEnter={(e) => {
-                        if (column.sortDirection !== SortDirection.Descend) {
-                            e.currentTarget.style.backgroundColor = '#f5f5f5';
-                        }
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = column.sortDirection === SortDirection.Descend ? '#e3f2fd' : 'transparent';
-                    }}
+                    className={`ka-custom-header-filter-sort-button ${
+                        column.sortDirection === SortDirection.Descend ? 'ka-custom-header-filter-sort-button--active' : ''
+                    }`}
                     onClick={handleSortDescending}
                 >
-                    <span style={{
-                        marginRight: '8px',
-                        fontSize: '14px',
-                        opacity: column.sortDirection === SortDirection.Descend ? 1 : 0.7
-                    }}>↓</span>
-                    <span style={{
-                        fontWeight: column.sortDirection === SortDirection.Descend ? 'bold' : 'normal'
-                    }}>降順</span>
+                    <span className={`ka-custom-header-filter-sort-icon ${
+                        column.sortDirection === SortDirection.Descend ? 'ka-custom-header-filter-sort-icon--active' : 'ka-custom-header-filter-sort-icon--inactive'
+                    }`}>↓</span>
+                    <span className={`ka-custom-header-filter-sort-text ${
+                        column.sortDirection === SortDirection.Descend ? 'ka-custom-header-filter-sort-text--active' : ''
+                    }`}>降順</span>
                 </div>
             </div>
             {column.dataType === DataType.Date ? (
