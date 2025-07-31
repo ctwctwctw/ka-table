@@ -63,20 +63,34 @@ export const checkPopupPosition = (
 ) => {
     const element = refToElement.current;
     if (element && column.isHeaderFilterPopupShown) {
-        const parent = element.offsetParent as HTMLElement;
-        const kaWrapper = parent.closest('.ka-table-wrapper') as HTMLElement;
+        // Find the .ka container as our reference point (now has position: relative)
+        const kaContainer = element.closest('.ka') as HTMLElement;
+        const kaWrapper = element.closest('.ka-table-wrapper') as HTMLElement;
 
-        // Find the filter button to get its bottom position
+        // Find the filter button to position the popup below it
         const filterButton = element.querySelector('.ka-header-filter-button') as HTMLElement;
 
-        if (filterButton) {
-            const buttonRect = filterButton.getBoundingClientRect();
-            const parentRect = parent.getBoundingClientRect();
+        if (filterButton && kaContainer) {
+            // Calculate position relative to .ka container
+            let xOffset = 0;
+            let yOffset = 0;
+
+            // Walk up the DOM tree to calculate offset relative to .ka container
+            let currentElement: HTMLElement | null = element;
+            while (currentElement && currentElement !== kaContainer) {
+                xOffset += currentElement.offsetLeft;
+                yOffset += currentElement.offsetTop;
+                currentElement = currentElement.offsetParent as HTMLElement | null;
+            }
+
+            // Add the filter button's height to position popup below it
+            const buttonHeight = filterButton.offsetHeight;
 
             const newPopupPosition: PopupPosition = {
-                x: element.offsetLeft + parent?.offsetLeft - kaWrapper?.scrollLeft,
-                y: buttonRect.bottom - parentRect.top + parent.offsetTop
+                x: xOffset - (kaWrapper?.scrollLeft || 0),
+                y: yOffset + buttonHeight
             }
+
             if (newPopupPosition.x !== column.headerFilterPopupPosition?.x || newPopupPosition.y !== column.headerFilterPopupPosition?.y) {
                 dispatch(updatePopupPosition(newPopupPosition));
             }
