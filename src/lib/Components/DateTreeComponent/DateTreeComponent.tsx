@@ -90,11 +90,33 @@ export const DateTreeFilter: React.FC<DateTreeFilterProps> = ({ column, data, fo
     const buildDateTree = React.useCallback(() => {
         if (column.dataType !== DataType.Date || !data) return [];
 
-        const dateValues = data.map(item => getValueByColumn(item, column)).filter(value => value != null);
+        const allValues = data.map(item => getValueByColumn(item, column));
+        const validDateValues: any[] = [];
+        const unsetDateValues: string[] = [];
+
+        // Separate valid dates from unset values (including invalid strings as failsafe)
+        allValues.forEach(value => {
+            if (value == null || value === '') {
+                // Handle null/undefined/empty string as unset
+                const formattedValue = format ? format({ column, value, rowData: null }) : 'unset';
+                unsetDateValues.push(formattedValue || 'unset');
+            } else {
+                const date = new Date(value);
+                if (isNaN(date.getTime())) {
+                    // Invalid date string - treat as unset (failsafe behavior)
+                    const formattedValue = format ? format({ column, value, rowData: null }) : 'unset';
+                    unsetDateValues.push(formattedValue || 'unset');
+                } else {
+                    // Valid date
+                    validDateValues.push(value);
+                }
+            }
+        });
+
         const dateMap = new Map<string, Map<string, Map<string, string[]>>>();
 
         // Store original date values with their formatted counterparts
-        dateValues.forEach(value => {
+        validDateValues.forEach(value => {
             const date = new Date(value);
             const year = date.getFullYear().toString();
             const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -117,6 +139,21 @@ export const DateTreeFilter: React.FC<DateTreeFilterProps> = ({ column, data, fo
 
         const selectedValues = new Set(column.headerFilterValues || []);
         const tree: DateTreeNode[] = [];
+
+        // Add "Unset Dates" node if there are any unset/invalid dates
+        if (unsetDateValues.length > 0) {
+            const uniqueUnsetValues = Array.from(new Set(unsetDateValues));
+            const unsetSelected = uniqueUnsetValues.some(val => selectedValues.has(val));
+
+            tree.push({
+                label: '日付未設定',
+                value: 'unset-dates',
+                isSelected: unsetSelected,
+                isExpanded: expandedNodes.has('unset-dates'),
+                level: 'year', // Use year level for top-level positioning
+                originalValues: uniqueUnsetValues
+            });
+        }
 
         Array.from(dateMap.keys()).sort().forEach(year => {
             const monthMap = dateMap.get(year)!;
@@ -202,6 +239,11 @@ export const DateTreeFilter: React.FC<DateTreeFilterProps> = ({ column, data, fo
         const updateSelectionInTree = (nodes: DateTreeNode[]): DateTreeNode[] => {
             return nodes.map(node => {
                 if (node.value === nodeValue) {
+                    // Handle "unset-dates" node specially (no children to update)
+                    if (node.value === 'unset-dates') {
+                        return { ...node, isSelected, isIndeterminate: false };
+                    }
+
                     if (node.children) {
                         // Recursively update all children
                         const updatedChildren = node.children.map(child =>
@@ -253,11 +295,16 @@ export const DateTreeFilter: React.FC<DateTreeFilterProps> = ({ column, data, fo
         const updatedNodes = updateSelectionInTree(dateTreeNodes);
         setDateTreeNodes(updatedNodes);
 
-        // Collect all selected original values from day-level nodes
+        // Collect all selected original values from day-level nodes and unset-dates
         const getSelectedOriginalValues = (nodes: DateTreeNode[]): string[] => {
             const selected: string[] = [];
             nodes.forEach(node => {
-                if (node.level === 'day' && node.isSelected && node.originalValues) {
+                // Handle "unset-dates" node
+                if (node.value === 'unset-dates' && node.isSelected && node.originalValues) {
+                    selected.push(...node.originalValues);
+                }
+                // Handle day-level nodes
+                else if (node.level === 'day' && node.isSelected && node.originalValues) {
                     selected.push(...node.originalValues);
                 }
                 if (node.children) {

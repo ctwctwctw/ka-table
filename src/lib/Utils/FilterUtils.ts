@@ -134,6 +134,20 @@ export const predefinedFilterOperators: FilterOperator[] = [{
     name: FilterOperatorName.IsNotEmpty,
 }];
 
+const filterByDateHeaderFilter = (value: any, headerFilterValues: string[], column: Column, format?: FormatFunc, item?: any): boolean => {
+    // First check if the formatted value matches (for valid dates)
+    const fieldValue = (format && format({ column, value, rowData: item })) || value?.toString();
+    if (headerFilterValues.includes(fieldValue)) {
+        return true;
+    }
+
+    const date = new Date(String(value));
+    if (isNaN(date.getTime())) {
+        return headerFilterValues.includes('unset');
+    }
+    return false;
+};
+
 export const filterByHeaderFilter = (data: any[], columns: Column[], format?: FormatFunc): any[] => {
     return columns.reduce((initialData, column) => {
         if (
@@ -146,6 +160,13 @@ export const filterByHeaderFilter = (data: any[], columns: Column[], format?: Fo
             if (column?.filter) {
                 return column.filter(value, column.headerFilterValues, item);
             }
+
+            // Use specialized date filter for Date columns
+            if (column.dataType === DataType.Date) {
+                return filterByDateHeaderFilter(value, column.headerFilterValues || [], column, format, item);
+            }
+
+            // Default behavior for other data types
             const fieldValue =
                 (format && format({ column, value, rowData: item }))
                 || value?.toString();
@@ -153,4 +174,3 @@ export const filterByHeaderFilter = (data: any[], columns: Column[], format?: Fo
         });
     }, data);
 }
-
