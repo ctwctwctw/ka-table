@@ -150,6 +150,11 @@ const filterByDateHeaderFilter = (value: any, headerFilterValues: string[], colu
 
 export const filterByHeaderFilter = (data: any[], columns: Column[], format?: FormatFunc): any[] => {
     return columns.reduce((initialData, column) => {
+        // Skip filtering for GroupedColumn objects (they don't have filter properties)
+        if (!column.hasOwnProperty('headerFilterValues')) {
+            return initialData;
+        }
+
         if (
             isEmpty(column.headerFilterValues)
         ) {
