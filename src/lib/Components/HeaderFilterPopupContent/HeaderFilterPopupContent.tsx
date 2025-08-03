@@ -69,6 +69,47 @@ const HeaderFilterPopupContent: React.FC<IHeaderFilterPopupProps> = (props) => {
         }
     };
 
+    // Get currently visible items after search filtering (for non-date columns)
+    const getVisibleFilterItems = () => {
+        if (column.dataType === DataType.Date) return [];
+
+        const searchValue = column.headerFilterSearchValue?.toLowerCase() || '';
+        if (!searchValue) {
+            // No search filter, return all items
+            return headerFilterValuesData.map(item => item.value);
+        }
+
+        // Filter items based on search value (same logic as Table filtering)
+        return headerFilterValuesData
+            .filter(item => item.value.toLowerCase().includes(searchValue))
+            .map(item => item.value);
+    };
+
+    const handleSelectAllVisible = () => {
+        const visibleItems = getVisibleFilterItems();
+
+        // Select all visible items
+        visibleItems.forEach(value => {
+            const isAlreadySelected = column.headerFilterValues?.includes(value);
+            if (!isAlreadySelected) {
+                dispatch(updateHeaderFilterValues(column.key, value, true));
+            }
+        });
+    };
+
+    const handleClearAll = () => {
+        // Clear all selected items for this column
+        const selectedItems = column.headerFilterValues || [];
+        selectedItems.forEach(value => {
+            dispatch(updateHeaderFilterValues(column.key, value, false));
+        });
+
+        // Clear the search string as well
+        if (column.headerFilterSearchValue) {
+            dispatch(updateHeaderFilterSearchValue(column.key, ''));
+        }
+    };
+
     return (
         <div>
             <div className="ka-custom-header-filter-sort-container">
@@ -107,60 +148,76 @@ const HeaderFilterPopupContent: React.FC<IHeaderFilterPopupProps> = (props) => {
                     onFilterChange={handleDateFilterChange}
                 />
             ) : (
-                <Table
-                    table={table}
-                    columns={[
-                        { key: selectedColumnKey, field: 'isSelected', width: 35, isFilterable: false },
-                        {
-                            key: column.key,
-                            field: 'value',
-                            style: { textAlign: 'left' },
-                            filterRowValue: column.headerFilterSearchValue
-                        }]}
-                    filteringMode={column.isHeaderFilterSearchable ? FilteringMode.FilterRow : undefined}
-                    data={headerFilterValuesData}
-                    selectedRows={column.headerFilterValues}
-                    filter={() => column.headerFilterSearch}
-                    rowKeyField={'value'}
-                    childComponents={{
-                        headRow: {
-                            elementAttributes: () => ({ style: { display: 'none' } })
-                        },
-                        filterRowCell: {
-                            elementAttributes: ({ column: filterRowColumn }) => ({
-                                style: {
-                                    top: 0,
-                                    display: filterRowColumn.key === selectedColumnKey ? 'none' : undefined
-                                },
-                                colSpan: filterRowColumn.key === selectedColumnKey ? 0 : 2
-                            })
-                        },
-                        filterRowCellInput: childComponents?.headerFilterPopupSearchInput,
-                        rootDiv: {
-                            elementAttributes: () => ({
-                                className: 'ka-header-filter-table'
-                            })
-                        },
-                        dataRow: childComponents?.headerFilterPopupRow,
-                        cell: {
-                            ...childComponents?.headerFilterPopupTextCell,
-                            elementAttributes: (componentProps) => ({
-                                onClick: () => {
-                                    const isSelect = !column?.headerFilterValues?.includes(componentProps?.rowKeyValue);
-                                    dispatch(updateHeaderFilterValues(column.key, componentProps?.rowKeyValue, isSelect));
-                                },
-                                ...childComponents?.headerFilterPopupTextCell?.elementAttributes?.(componentProps)
-                            }),
-                        },
-                        cellText: {
-                            content: (componentProps) => {
-                                switch (componentProps?.column.key) {
-                                case selectedColumnKey: return <CellEditorBoolean {...componentProps} />;
-                                }
+                <div>
+                    <div className="ka-custom-header-filter-select-all-container">
+                        <button
+                            className="ka-custom-header-filter-select-all-button"
+                            onClick={handleSelectAllVisible}
+                        >
+                            表示中の項目を全選択
+                        </button>
+                        <button
+                            className="ka-custom-header-filter-clear-button"
+                            onClick={handleClearAll}
+                        >
+                            クリア
+                        </button>
+                    </div>
+                    <Table
+                        table={table}
+                        columns={[
+                            { key: selectedColumnKey, field: 'isSelected', width: 35, isFilterable: false },
+                            {
+                                key: column.key,
+                                field: 'value',
+                                style: { textAlign: 'left' },
+                                filterRowValue: column.headerFilterSearchValue
+                            }]}
+                        filteringMode={column.isHeaderFilterSearchable ? FilteringMode.FilterRow : undefined}
+                        data={headerFilterValuesData}
+                        selectedRows={column.headerFilterValues}
+                        filter={() => column.headerFilterSearch}
+                        rowKeyField={'value'}
+                        childComponents={{
+                            headRow: {
+                                elementAttributes: () => ({ style: { display: 'none' } })
                             },
-                        },
+                            filterRowCell: {
+                                elementAttributes: ({ column: filterRowColumn }) => ({
+                                    style: {
+                                        top: 0,
+                                        display: filterRowColumn.key === selectedColumnKey ? 'none' : undefined
+                                    },
+                                    colSpan: filterRowColumn.key === selectedColumnKey ? 0 : 2
+                                })
+                            },
+                            filterRowCellInput: childComponents?.headerFilterPopupSearchInput,
+                            rootDiv: {
+                                elementAttributes: () => ({
+                                    className: 'ka-header-filter-table'
+                                })
+                            },
+                            dataRow: childComponents?.headerFilterPopupRow,
+                            cell: {
+                                ...childComponents?.headerFilterPopupTextCell,
+                                elementAttributes: (componentProps) => ({
+                                    onClick: () => {
+                                        const isSelect = !column?.headerFilterValues?.includes(componentProps?.rowKeyValue);
+                                        dispatch(updateHeaderFilterValues(column.key, componentProps?.rowKeyValue, isSelect));
+                                    },
+                                    ...childComponents?.headerFilterPopupTextCell?.elementAttributes?.(componentProps)
+                                }),
+                            },
+                            cellText: {
+                                content: (componentProps) => {
+                                    switch (componentProps?.column.key) {
+                                    case selectedColumnKey: return <CellEditorBoolean {...componentProps} />;
+                                    }
+                                },
+                            },
 
-                    }} />
+                        }} />
+                </div>
             )}
         </div>
     )

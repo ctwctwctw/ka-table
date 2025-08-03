@@ -120,6 +120,41 @@
   font-weight: bold;
 }
 
+// Header Filter Select All and Clear Buttons
+.ka-custom-header-filter-select-all-container {
+  padding: 8px;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  gap: 4px;
+}
+
+.ka-custom-header-filter-select-all-button,
+.ka-custom-header-filter-clear-button {
+  flex: 1;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.ka-custom-header-filter-select-all-button {
+  background-color: #f5f5f5;
+}
+
+.ka-custom-header-filter-select-all-button:hover {
+  background-color: #e8e8e8;
+}
+
+.ka-custom-header-filter-clear-button {
+  background-color: #ffe6e6;
+}
+
+.ka-custom-header-filter-clear-button:hover {
+  background-color: #ffcccc;
+}
+
 
 .ka {
   overflow: hidden;
