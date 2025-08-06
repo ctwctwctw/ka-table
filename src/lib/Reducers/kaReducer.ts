@@ -156,7 +156,7 @@ const kaReducer: any = (props: ITableProps, action: any): ITableProps => {
         return { ...props, columns: newColumns };
     }
     case ActionType.ReorderColumns: {
-        const newData = reorderData(columns, (d) => d.key, action.columnKey, action.targetColumnKey);
+        const newData = reorderData(columns, (d) => d.key, action.columnKey, action.targetColumnKey, props.groupedColumns);
         return { ...props, columns: newData };
     }
     case ActionType.MoveColumnToIndex: {

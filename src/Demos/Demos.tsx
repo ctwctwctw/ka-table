@@ -35,6 +35,7 @@ import FilterRowDemo from './FilterRowDemo/FilterRowDemo';
 import FixedColumnDemo from './FixedColumnDemo/FixedColumnDemo';
 import GetDataByPropsDemo from './GetDataByPropsDemo/GetDataByPropsDemo';
 import GroupedColumnsDemo from './GroupedColumnsDemo/GroupedColumnsDemo';
+import GroupedColumnReorderingDemo from './GroupedColumnReorderingDemo/GroupedColumnReorderingDemo';
 import GroupingCustomCellDemo from './GroupingCustomCellDemo/GroupingCustomCellDemo';
 import GroupingCustomRowDemo from './GroupingCustomRowDemo/GroupingCustomRowDemo';
 import GroupingDemo from './GroupingDemo/GroupingDemo';
@@ -110,6 +111,7 @@ const demos: Demo[] = [
     new Demo(FixedColumnDemo, '/fixed-column', 'Fixed Colum', 'FixedColumnDemo', 'https://stackblitz.com/edit/table-fixed-column-js', 'https://stackblitz.com/edit/table-fixed-column-ts', 'Columns'),
     new Demo(GetDataByPropsDemo, '/get-data-by-props', 'Get Data By Props', 'GetDataByPropsDemo', 'https://stackblitz.com/edit/table-get-data-by-props-js', 'https://stackblitz.com/edit/table-get-data-by-props-ts', 'Miscellaneous'),
     new Demo(GroupedColumnsDemo, '/grouped-columns', 'Grouped Columns', 'GroupedColumnsDemo', 'https://stackblitz.com/edit/table-grouped-columns-js', 'https://stackblitz.com/edit/table-grouped-columns-ts', 'Grouping'),
+    new Demo(GroupedColumnReorderingDemo, '/grouped-column-reordering', 'Grouped Column Reordering', 'GroupedColumnReorderingDemo', 'https://stackblitz.com/edit/table-grouped-column-reordering-js', 'https://stackblitz.com/edit/table-grouped-column-reordering-ts', 'Columns'),
     new Demo(GroupingCustomCellDemo, '/grouping-custom-cell', 'Grouping Custom Cell', 'GroupingCustomCellDemo', 'https://stackblitz.com/edit/table-grouping-custom-cell-js', 'https://stackblitz.com/edit/table-grouping-custom-cell-ts', 'Grouping'),
     new Demo(GroupingCustomRowDemo, '/grouping-custom-row', 'Grouping Custom Row', 'GroupingCustomRowDemo', 'https://stackblitz.com/edit/table-grouping-custom-row-js', 'https://stackblitz.com/edit/table-grouping-custom-row-ts', 'Grouping'),
     new Demo(GroupingDemo, '/grouping', 'Grouping', 'GroupingDemo', 'https://stackblitz.com/edit/table-grouping-js', 'https://stackblitz.com/edit/table-grouping-ts', 'Grouping'),
