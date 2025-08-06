@@ -88,15 +88,11 @@ export const insertBefore = (data: any[], getKey: (d: any) => any, keyValue: any
 
 // Helper function to find the parent group of a column or group
 const findParentGroup = (key: string, groupedColumns: GroupedColumn[]): GroupedColumn | null => {
-    console.log(`🔍 Finding parent for key: ${key}`);
     for (const group of groupedColumns) {
-        console.log(`  🔎 Checking group ${group.key} with columnsKeys:`, group.columnsKeys);
         if (group.columnsKeys.includes(key)) {
-            console.log(`  ✅ Found parent: ${group.key}`);
             return group;
         }
     }
-    console.log('  ❌ No parent found - returning null');
     return null; // Not in any group (ungrouped or top-level group)
 };
 
@@ -110,11 +106,6 @@ const isSameRoot = (sourceKey: string, targetKey: string, groupedColumns: Groupe
     const sourceParent = findParentGroup(sourceKey, groupedColumns);
     const targetParent = findParentGroup(targetKey, groupedColumns);
 
-    console.log(`🔍 isSameRoot check: ${sourceKey} → ${targetKey}`);
-    console.log('📋 Source parent:', sourceParent ? { key: sourceParent.key, title: sourceParent.title } : 'null (root level)');
-    console.log('📋 Target parent:', targetParent ? { key: targetParent.key, title: targetParent.title } : 'null (root level)');
-    console.log('📊 Same parent?', sourceParent === targetParent);
-
     // Same root conditions - items can only reorder if they have the exact same parent
     // This means:
     // 1. Both have the same parent group (including both null = root level)
@@ -124,12 +115,10 @@ const isSameRoot = (sourceKey: string, targetKey: string, groupedColumns: Groupe
 
     // Must have exactly the same parent to be considered same root
     if (sourceParent === targetParent) {
-        console.log('✅ Same root - allowing reorder');
         return true;
     }
 
     // Different parents = different root levels, not allowed
-    console.log('❌ Different root - blocking reorder');
     return false;
 };
 
@@ -162,26 +151,17 @@ const reorderGroupBlocks = (data: any[], getKey: (d: any) => any, sourceGroupKey
     const targetGroup = groupedColumns.find(gc => gc.key === targetGroupKey);
 
     if (!sourceGroup || !targetGroup) {
-        console.log(`❌ Could not find groups: source=${!!sourceGroup}, target=${!!targetGroup}`);
         return data;
     }
-
-    console.log('📊 Reordering groups:', {
-        sourceGroup: { key: sourceGroup.key, columnsKeys: sourceGroup.columnsKeys },
-        targetGroup: { key: targetGroup.key, columnsKeys: targetGroup.columnsKeys }
-    });
 
     // Get all leaf columns (actual columns) belonging to source and target groups
     const sourceLeafKeys = getLeafColumnKeys(sourceGroupKey, groupedColumns);
     const targetLeafKeys = getLeafColumnKeys(targetGroupKey, groupedColumns);
 
-    console.log('📋 Leaf column keys:', { sourceLeafKeys, targetLeafKeys });
-
     const sourceColumns = data.filter(col => sourceLeafKeys.includes(getKey(col)));
     const targetColumns = data.filter(col => targetLeafKeys.includes(getKey(col)));
 
     if (sourceColumns.length === 0 || targetColumns.length === 0) {
-        console.log(`❌ No columns found for groups: source=${sourceColumns.length}, target=${targetColumns.length}`);
         return data;
     }
 
@@ -198,7 +178,6 @@ const reorderGroupBlocks = (data: any[], getKey: (d: any) => any, sourceGroupKey
     const targetStartIndex = result.findIndex(col => targetLeafKeys.includes(getKey(col)));
 
     if (sourceStartIndex === -1 || targetStartIndex === -1) {
-        console.log(`❌ Could not find group positions: source=${sourceStartIndex}, target=${targetStartIndex}`);
         return data;
     }
 
@@ -220,24 +199,17 @@ const reorderGroupBlocks = (data: any[], getKey: (d: any) => any, sourceGroupKey
 
     result.splice(insertPosition, 0, ...sourceColumns);
 
-    console.log('✅ Group reordering completed. New order:', result.map(c => getKey(c)));
     return result;
 };
 
 // Helper function to move a group before/after a column
 const reorderGroupToColumn = (data: any[], getKey: (d: any) => any, sourceGroup: GroupedColumn, targetColumnKey: string, beforeTarget: boolean, groupedColumns: GroupedColumn[]) => {
-    console.log(`📊 Moving group ${sourceGroup.key} to column ${targetColumnKey}`);
-
     // Get leaf column keys for the source group
     const sourceLeafKeys = getLeafColumnKeys(sourceGroup.key, groupedColumns);
     const sourceColumns = data.filter(col => sourceLeafKeys.includes(getKey(col)));
     const targetIndex = data.findIndex(col => getKey(col) === targetColumnKey);
 
     if (sourceColumns.length === 0 || targetIndex === -1) {
-        console.log('❌ Could not find source columns or target position');
-        console.log('  Source leaf keys:', sourceLeafKeys);
-        console.log('  Source columns found:', sourceColumns.length);
-        console.log('  Target column found:', targetIndex !== -1);
         return data;
     }
 
@@ -251,14 +223,11 @@ const reorderGroupToColumn = (data: any[], getKey: (d: any) => any, sourceGroup:
     // Insert source columns at target position
     result.splice(insertPosition, 0, ...sourceColumns);
 
-    console.log('✅ Group moved. New order:', result.map(c => getKey(c)));
     return result;
 };
 
 // Helper function to move a column before/after a group
 const reorderColumnToGroup = (data: any[], getKey: (d: any) => any, sourceColumnKey: string, targetGroup: GroupedColumn, beforeTarget: boolean, groupedColumns: GroupedColumn[]) => {
-    console.log(`📋 Moving column ${sourceColumnKey} to group ${targetGroup.key}`);
-
     const sourceColumn = data.find(col => getKey(col) === sourceColumnKey);
 
     // Get leaf column keys for the target group
@@ -266,10 +235,6 @@ const reorderColumnToGroup = (data: any[], getKey: (d: any) => any, sourceColumn
     const firstTargetColumn = data.find(col => targetLeafKeys.includes(getKey(col)));
 
     if (!sourceColumn || !firstTargetColumn) {
-        console.log('❌ Could not find source column or target group');
-        console.log('  Source column found:', !!sourceColumn);
-        console.log('  Target leaf keys:', targetLeafKeys);
-        console.log('  First target column found:', !!firstTargetColumn);
         return data;
     }
 
@@ -283,7 +248,6 @@ const reorderColumnToGroup = (data: any[], getKey: (d: any) => any, sourceColumn
     // Insert source column at target position
     result.splice(insertPosition, 0, sourceColumn);
 
-    console.log('✅ Column moved. New order:', result.map(c => getKey(c)));
     return result;
 };
 
@@ -300,11 +264,8 @@ export const reorderData = (data: any[], getKey: (d: any) => any, keyValue: any,
 
     // If both are group headers, check if they're at the same root level first
     if (sourceIsGroup && targetIsGroup) {
-        console.log(`🏷️ Group-to-group reordering: ${keyValue} → ${targetKeyValue}`);
-
         // Check if they're at the same root level
         if (!isSameRoot(keyValue, targetKeyValue, groupedColumns)) {
-            console.log('❌ Group reordering blocked - different root levels');
             return data;
         }
 
@@ -313,11 +274,8 @@ export const reorderData = (data: any[], getKey: (d: any) => any, keyValue: any,
 
     // If one is a group header and one is an individual column, handle as root-level reordering
     if (sourceIsGroup || targetIsGroup) {
-        console.log(`🔄 Mixed reordering (ungrouped ↔ group): ${keyValue} → ${targetKeyValue}`);
-
         // Check if they're at the same root level
         if (!isSameRoot(keyValue, targetKeyValue, groupedColumns)) {
-            console.log('❌ Reordering blocked - different root levels');
             return data;
         }
 
@@ -338,17 +296,13 @@ export const reorderData = (data: any[], getKey: (d: any) => any, keyValue: any,
     const targetExists = data.some(d => getKey(d) === targetKeyValue);
 
     if (!sourceExists || !targetExists) {
-        console.log(`❌ Reordering blocked - keys don't exist in data array: source=${sourceExists}, target=${targetExists}`);
         return data; // Return unchanged data
     }
 
     // Check if source and target are at the same root level
     if (!isSameRoot(keyValue, targetKeyValue, groupedColumns)) {
-        console.log(`❌ Reordering blocked - different root levels: ${keyValue} → ${targetKeyValue}`);
         return data; // Return unchanged data
     }
-
-    console.log(`✅ Reordering allowed - same root level: ${keyValue} → ${targetKeyValue}`);
     const targetIndex = data.findIndex(d => getKey(d) === targetKeyValue);
     return reorderDataByIndex(data, getKey, keyValue, targetIndex);
 };
